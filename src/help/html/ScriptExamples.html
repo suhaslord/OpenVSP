@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Finding Current Scripting Examples</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="github-pandoc.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Finding Current Scripting Examples</h1>
+</header>
+<p>OpenVSP ships several kinds of scripting material. They are useful
+for different purposes, and not every script should be treated as a
+current tutorial or as a place to add new work. This page is a short map
+for users who are trying to find a good example without accidentally
+following a legacy workflow.</p>
+<h2 id="where-to-start">Where to Start</h2>
+<p>For AngelScript, start in <code>examples/scripts</code>. Choose the
+smallest script that demonstrates the API or analysis workflow you need,
+then read it from top to bottom before copying pieces into your own
+script.</p>
+<p>Useful examples include:</p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Goal</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Basic geometry/API calls</td>
+<td style="text-align: left;"><code>CreateEditGeom.vspscript</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Airfoil export</td>
+<td style="text-align: left;"><code>AirfoilExport.vspscript</code>,
+<code>SingleAirfoilExport.vspscript</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Geometry/result utilities</td>
+<td style="text-align: left;"><code>DegenGeom.vspscript</code>,
+<code>DumpResults.vspscript</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Analysis workflows</td>
+<td style="text-align: left;"><code>CFDMesh.vspscript</code>,
+<code>FEAMesh.vspscript</code>,
+<code>ParasiteDragScriptTest.vspscript</code></td>
+</tr>
+</tbody>
+</table>
+<p>For Python material, see
+<code>examples/scripts/python_scripts</code>, but check the file and
+nearby README before treating an older script as the preferred
+workflow.</p>
+<p>For AngelScript language features and API access used by Advanced
+Links, see <a href="AdvLink.md">Advanced Parameter Linking</a>.</p>
+<h2 id="examples-that-are-also-tests">Examples That Are Also Tests</h2>
+<p>Many files named <code>Test*.vspscript</code> in
+<code>examples/scripts</code> are executable regression tests as well as
+examples. They are wired into OpenVSP’s CTest suite from
+<code>src/test/scripttest/CMakeLists.txt</code> and intentionally
+contain checks that return failures when behavior changes.</p>
+<p>That makes them valuable because they show API calls that are
+exercised automatically, but it also means they may be more verbose than
+a clean tutorial. When adapting one:</p>
+<ol type="1">
+<li>identify the API calls that demonstrate the workflow you need;</li>
+<li>keep the test checks intact if you are modifying the repository test
+itself;</li>
+<li>if you only need a standalone user script, copy the minimum workflow
+rather than the whole test harness.</li>
+</ol>
+<p>The API help examples are also generated into automated tests, so
+current API documentation is a useful reference when you want a small
+example tied closely to a specific function.</p>
+<h2 id="legacy-vspaero-vv-material">Legacy VSPAERO V&amp;V Material</h2>
+<p>The older <code>Master_VSP_VV_Script.vspscript</code> is legacy
+material. A later Python port exists at
+<code>examples/scripts/python_scripts/Master_VSP_VV_script_test.py</code>,
+but that Python V&amp;V collection is also not the current maintained
+direction for new V&amp;V development.</p>
+<p>Both can still be useful for understanding historical studies and
+existing comparison logic. However, do not treat either master script as
+the default place to add a new validation case. If you are planning new
+VSPAERO verification or validation work, first check current project
+guidance or ask the maintainers where that work belongs.</p>
+<h2 id="when-an-example-looks-stale">When an Example Looks Stale</h2>
+<p>Before building new work around an example that appears old or
+unusually complex:</p>
+<ul>
+<li>compare it with the current <code>main</code> branch;</li>
+<li>look for a newer Python or AngelScript equivalent nearby;</li>
+<li>check whether the example is referenced by the current test
+suite;</li>
+<li>prefer current API documentation and actively tested examples when
+they cover the same behavior.</li>
+</ul>
+<p>If two examples disagree, or a documentation page points to a
+workflow that has been superseded, reporting that specific mismatch is
+usually more useful than expanding the old workflow.</p>
+</body>
+</html>
