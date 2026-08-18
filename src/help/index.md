@@ -11,3 +11,4 @@ warranted.  These in-program help files will be added as needed, but this also p
 opportunity for users to contribute.
 
  - [Advanced Parameter Linking](AdvLink.md)
+ - [Finding Current Scripting Examples](ScriptExamples.md)
