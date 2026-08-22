@@ -11,3 +11,5 @@ warranted.  These in-program help files will be added as needed, but this also p
 opportunity for users to contribute.
 
  - [Advanced Parameter Linking](AdvLink.md)
+ - [Scripting Examples: Where to Start](ScriptExamples.md)
+ - [Building a Reproducible Validation Case](ValidationWorkflow.md)
