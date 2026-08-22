@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Building a Reproducible Validation Case</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {font-size: inherit; width: 0.8em; margin: 0 0.8em 0.2em -1.6em; vertical-align: middle;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="github-pandoc.css" />
+</head>
+<body>
+<header id="title-block-header"><h1 class="title">Building a Reproducible Validation Case</h1></header>
+<p>A useful verification or validation case is small enough to understand, specific enough to reproduce, and explicit about what is being compared. The goal is not to create the largest possible test. The goal is to make one scientific claim that another contributor can check.</p>
+<h2 id="first-decide-what-you-are-testing">First Decide What You Are Testing</h2>
+<p><strong>Verification</strong> asks whether the software is solving the intended equations correctly. Typical references include analytic solutions, convergence studies, manufactured solutions, or trusted numerical benchmarks.</p>
+<p><strong>Validation</strong> asks whether the model agrees with physical or experimental reference data closely enough for the intended use. Typical references include wind-tunnel data, published measurements, or another documented physical dataset.</p>
+<p>Keep that distinction in the write-up. A regression test can preserve either kind of result, but passing a regression test alone does not make a result physically validated.</p>
+<h2 id="minimum-useful-case">Minimum Useful Case</h2>
+<ul><li>one geometry or configuration;</li><li>one analysis setup;</li><li>one reference dataset or published benchmark;</li><li>a small number of comparison outputs;</li><li>explicit units and coordinate conventions;</li><li>a repeatable way to run the case;</li><li>a clear pass/fail tolerance or an explicitly descriptive comparison if no tolerance has been accepted yet.</li></ul>
+<p>This is easier to review than a large campaign whose assumptions are difficult to isolate.</p>
+<h2 id="record-the-inputs-that-actually-matter">Record the Inputs That Actually Matter</h2>
+<table><thead><tr class="header"><th style="text-align: left;">Category</th><th style="text-align: left;">Examples</th></tr></thead><tbody>
+<tr class="odd"><td style="text-align: left;">Software</td><td style="text-align: left;">OpenVSP version or commit, VSPAERO solver version if relevant</td></tr>
+<tr class="even"><td style="text-align: left;">Geometry</td><td style="text-align: left;">model file or script, reference dimensions, selected sets/surfaces</td></tr>
+<tr class="odd"><td style="text-align: left;">Flow/analysis</td><td style="text-align: left;">Mach, Reynolds number, angle of attack, wake settings, symmetry, method choices</td></tr>
+<tr class="even"><td style="text-align: left;">Discretization</td><td style="text-align: left;">tessellation, paneling, mesh/refinement settings</td></tr>
+<tr class="odd"><td style="text-align: left;">Reference</td><td style="text-align: left;">source title, figure/table/case identifier, units, preprocessing steps</td></tr>
+<tr class="even"><td style="text-align: left;">Comparison</td><td style="text-align: left;">output variables, normalization, sign convention, tolerance or error metric</td></tr>
+</tbody></table>
+<p>Do not rely on a screenshot to carry information that can be written down exactly.</p>
+<h2 id="keep-the-case-reproducible-from-a-clean-state">Keep the Case Reproducible from a Clean State</h2>
+<ol type="1"><li>start from a known model or construct it in a script;</li><li>set important analysis inputs explicitly;</li><li>avoid depending on GUI state that the script does not recreate;</li><li>write outputs to predictable files or result objects;</li><li>document any external data that cannot live in the repository;</li><li>state any platform-specific requirements.</li></ol>
+<p>If a case only works after manually clicking several settings in the GUI, capture those settings in the script or document them precisely.</p>
+<h2 id="compare-the-smallest-meaningful-set-of-outputs">Compare the Smallest Meaningful Set of Outputs</h2>
+<p>Choose outputs that directly support the claim. For aerodynamic work that might be a lift coefficient, drag coefficient, moment coefficient, pressure distribution, or a convergence trend.</p>
+<ul><li>reference value or series;</li><li>OpenVSP/VSPAERO value or series;</li><li>units or nondimensionalization;</li><li>absolute or relative difference;</li><li>tolerance, if one is justified.</li></ul>
+<h2 id="separate-reference-data-from-generated-results">Separate Reference Data from Generated Results</h2>
+<ul><li>immutable source/reference data;</li><li>scripts or configuration needed to reproduce the run;</li><li>generated solver output;</li><li>post-processing or comparison output.</li></ul>
+<p>Generated files should not become the source of truth merely because they were checked into a previous run.</p>
+<h2 id="use-existing-examples-as-building-blocks-not-as-authority">Use Existing Examples as Building Blocks, Not as Authority</h2>
+<p>Current examples and tests are useful for API syntax and analysis setup. Historical V&amp;V drivers can also be useful for understanding older studies. Neither should replace the external reference for a validation claim.</p>
+<ul><li>keep only the setup needed for the selected case;</li><li>identify assumptions inherited from the example;</li><li>update deprecated or superseded API usage;</li><li>state what changed from the original example.</li></ul>
+<p>See <a href="ScriptExamples.html">Scripting Examples: Where to Start</a> for guidance on choosing a source example.</p>
+<h2 id="suggested-review-checklist">Suggested Review Checklist</h2>
+<ul><li>Is the purpose of the case stated in one or two sentences?</li><li>Is the reference source unambiguous?</li><li>Are the key input values explicit?</li><li>Are coordinate systems and units clear?</li><li>Can the run start from a clean checkout or documented model file?</li><li>Are generated outputs separated from source/reference data?</li><li>Are the comparison metrics easy to identify?</li><li>Is the expected behavior or tolerance justified?</li><li>Does the case avoid unrelated documentation or solver changes?</li></ul>
+<h2 id="what-to-put-in-a-pull-request">What to Put in a Pull Request</h2>
+<ol type="1"><li><strong>Reference</strong> — exactly what published or trusted case is being reproduced.</li><li><strong>Setup</strong> — geometry, analysis settings, and run instructions.</li><li><strong>Comparison</strong> — the small set of outputs being checked.</li><li><strong>Result</strong> — the observed agreement or discrepancy without overstating what it proves.</li><li><strong>Scope</strong> — what the pull request intentionally does not attempt to validate.</li></ol>
+<p>If the result uncovers a discrepancy, that can still be a useful contribution. Preserve the reproducible case and describe the difference before changing solver behavior or reference data.</p>
+</body>
+</html>
