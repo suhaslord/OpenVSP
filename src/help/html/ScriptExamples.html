@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Scripting Examples: Where to Start</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="github-pandoc.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Scripting Examples: Where to Start</h1>
+</header>
+<p>OpenVSP ships with several kinds of examples. They are all useful,
+but they are not interchangeable. A new user can save a lot of time by
+first deciding whether a file is a small example, a regression test, a
+Python example, or historical verification and validation material.</p>
+<h2 id="start-with-the-smallest-example-that-matches-your-goal">Start
+with the Smallest Example That Matches Your Goal</h2>
+<table>
+<thead>
+<tr class="header"><th style="text-align: left;">Goal</th><th style="text-align: left;">Suggested first file</th></tr>
+</thead>
+<tbody>
+<tr class="odd"><td style="text-align: left;">Create and edit geometry</td><td style="text-align: left;"><code>examples/scripts/CreateEditGeom.vspscript</code></td></tr>
+<tr class="even"><td style="text-align: left;">Export airfoils</td><td style="text-align: left;"><code>examples/scripts/AirfoilExport.vspscript</code> or <code>SingleAirfoilExport.vspscript</code></td></tr>
+<tr class="odd"><td style="text-align: left;">Generate degenerate geometry</td><td style="text-align: left;"><code>examples/scripts/DegenGeom.vspscript</code></td></tr>
+<tr class="even"><td style="text-align: left;">Inspect analysis results</td><td style="text-align: left;"><code>examples/scripts/DumpResults.vspscript</code></td></tr>
+<tr class="odd"><td style="text-align: left;">Build a CFD mesh workflow</td><td style="text-align: left;"><code>examples/scripts/CFDMesh.vspscript</code></td></tr>
+<tr class="even"><td style="text-align: left;">Build an FEA mesh workflow</td><td style="text-align: left;"><code>examples/scripts/FEAMesh.vspscript</code></td></tr>
+<tr class="odd"><td style="text-align: left;">Run parasite-drag analysis</td><td style="text-align: left;"><code>examples/scripts/ParasiteDragScriptTest.vspscript</code></td></tr>
+</tbody>
+</table>
+<p>For Python examples, use <code>examples/scripts/python_scripts</code>
+and the generated Python API examples. Prefer a small, actively tested
+example over a large historical driver when both cover the same API.</p>
+<h2 id="why-are-many-examples-named-test">Why Are Many Examples Named <code>Test...</code>?</h2>
+<p>Many files under <code>examples/scripts</code> now serve two purposes:</p>
+<ol type="1"><li>they show how an API workflow is used; and</li><li>they run as regression tests and contain checks that can fail automatically.</li></ol>
+<p>That second job explains code that can look unnecessary in a user script: expected-value checks, error-count checks, cleanup code, and test-only setup. When learning from one of these files, copy the minimum workflow you need. When editing the repository test itself, keep the checks intact.</p>
+<p>A useful rule is:</p>
+<blockquote><p><strong>Example code teaches the workflow; test code proves the workflow still behaves as expected.</strong></p></blockquote>
+<h2 id="file-types-you-will-encounter">File Types You Will Encounter</h2>
+<table>
+<thead><tr class="header"><th style="text-align: left;">File type</th><th style="text-align: left;">What it is for</th><th style="text-align: left;">Good starting point?</th></tr></thead>
+<tbody>
+<tr class="odd"><td style="text-align: left;">Small named <code>.vspscript</code></td><td style="text-align: left;">One focused AngelScript workflow</td><td style="text-align: left;">Yes</td></tr>
+<tr class="even"><td style="text-align: left;"><code>Test*.vspscript</code></td><td style="text-align: left;">Working example plus regression assertions</td><td style="text-align: left;">Yes, after you identify the test-only parts</td></tr>
+<tr class="odd"><td style="text-align: left;"><code>python_scripts/*.py</code></td><td style="text-align: left;">Python API examples and utilities</td><td style="text-align: left;">Yes for Python users</td></tr>
+<tr class="even"><td style="text-align: left;">Generated API examples</td><td style="text-align: left;">Small examples tied to individual API calls and exercised by tests</td><td style="text-align: left;">Excellent for one API call</td></tr>
+<tr class="odd"><td style="text-align: left;"><code>Master_VSP_VV_Script.vspscript</code></td><td style="text-align: left;">Historical VSPAERO V&amp;V driver</td><td style="text-align: left;">No for new work</td></tr>
+</tbody></table>
+<h2 id="the-master-vspaero-vv-scripts-are-historical-references">The Master VSPAERO V&amp;V Scripts Are Historical References</h2>
+<p><code>Master_VSP_VV_Script.vspscript</code> and its later Python port contain useful historical studies and comparison logic. They should not be treated as the default place to add a new verification or validation case.</p>
+<p>For new work, start with the current solver/API path you actually want to test, reduce it to one reproducible case, and follow <a href="ValidationWorkflow.html">Building a Reproducible Validation Case</a>.</p>
+<h2 id="how-to-tell-whether-an-example-is-current">How to Tell Whether an Example Is Current</h2>
+<ul><li>check whether it is referenced by the current test suite;</li><li>compare its API calls with current generated API documentation;</li><li>look for a smaller example that covers the same operation;</li><li>check recent changes to the example when behavior is surprising;</li><li>prefer a current tested example over a historical driver when both exist.</li></ul>
+<p>A file can still run and still be the wrong template for new development. The important question is not only <strong>“does this execute?”</strong> but also <strong>“what role does this file serve today?”</strong></p>
+<h2 id="a-good-first-script">A Good First Script</h2>
+<ol type="1"><li>clear or create a model;</li><li>create only the geometry required by the example;</li><li>set the few parameters that matter to the behavior being demonstrated;</li><li>run one analysis or export operation;</li><li>inspect one or two results;</li><li>add an assertion only if the file is intended to become a regression test.</li></ol>
+<p>This structure is easier to debug than starting from a large all-in-one script.</p>
+<h2 id="when-two-examples-disagree">When Two Examples Disagree</h2>
+<p>Do not silently choose whichever one produces the expected result. First determine whether the files serve different purposes or use different solver/configuration assumptions. Check the current API documentation and the actively tested example path.</p>
+<p>If the mismatch remains, report the exact two files, the OpenVSP version or commit, and the smallest behavior that differs. That gives maintainers something reproducible to investigate.</p>
+<h2 id="before-turning-an-example-into-a-validation-case">Before Turning an Example into a Validation Case</h2>
+<p>A working example only proves that the workflow executes. A validation case needs a reference, controlled inputs, a comparison metric, and enough metadata for someone else to reproduce the result.</p>
+<p>See <a href="ValidationWorkflow.html">Building a Reproducible Validation Case</a> for a practical checklist.</p>
+</body>
+</html>
